@@ -1,9 +1,16 @@
 import React from "react";
+import "./ChatText.css";
 
 export const ChatText = ({ message }) => {
   return (
     <div>
-      <span>{message.from + " " + message.text}</span>
+      <div
+        className={`text ${
+          message.from === "me" ? "me-background" : "chatbot-background"
+        }`}
+      >
+        {message.text}
+      </div>
     </div>
   );
 };
