@@ -1,8 +1,10 @@
 const express = require("express");
+const cors = require("cors");
 
 const port = 4000;
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const mockMessage =
@@ -18,11 +20,8 @@ const mockMessage =
 
 const chatHandler = async (req, res) => {
   const query = req.body.query;
-  res.json({
-    status: 200,
-    data: {
-      message: query + "\n" + mockMessage,
-    },
+  res.status(200).json({
+    message: query + "\n" + mockMessage,
   });
 };
 
