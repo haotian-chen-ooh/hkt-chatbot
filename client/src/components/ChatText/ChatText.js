@@ -1,4 +1,5 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import "./ChatText.css";
 
 export const ChatText = ({ message }) => {
@@ -9,7 +10,7 @@ export const ChatText = ({ message }) => {
           message.from === "me" ? "me-background" : "chatbot-background"
         }`}
       >
-        {message.text}
+        <ReactMarkdown>{message.text}</ReactMarkdown>
       </div>
     </div>
   );
