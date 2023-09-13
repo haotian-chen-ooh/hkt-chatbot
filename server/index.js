@@ -75,8 +75,9 @@ const chatHandler = async (req, res) => {
     temperature: 0.5,
     max_tokens: 256,
   });
+  const formattedAnswer = openaiRes.choices[0].message.content;
   res.status(200).json({
-    message: query + "\n" + openaiRes.choices[0].message.content,
+    message: formattedAnswer,
   });
 };
 
