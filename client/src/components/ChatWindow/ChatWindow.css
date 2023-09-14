@@ -2,5 +2,9 @@
   width: 100%;
   max-width: 800px;
   height: 600px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   background-color: #262c36;
 }
