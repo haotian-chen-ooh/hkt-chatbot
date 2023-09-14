@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.logo {
+  height: 64px;
+}
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #f60;
+}
