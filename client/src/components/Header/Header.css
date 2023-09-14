@@ -5,6 +5,14 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding: 4px;
+}
+.sherpa-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 64px;
 }
 .sherpa-logo {
   height: 64px;
