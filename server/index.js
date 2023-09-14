@@ -1,13 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const OpenAI = require("openai");
-const dotenv = require("dotenv");
+const AWS = require("aws-sdk");
 
-dotenv.config("./.env");
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const kendra = new AWS.Kendra({ region: "ap-southeast-2" });
 
 const port = 4000;
 const app = express();
@@ -15,67 +10,41 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const mockSearchResult = `
-The campaign delivery team were advised by Lendlease that several sites had been overscheduled. Upon investigation, the team found that multiple campaigns had been duplicated in Lendlease’s Broadsign (the campaigns listed below). Lendlease provided the attached images displaying that several campaigns have been duplicated in Lendlease’s Broadsign;
-Campaigns that were duplicated in Lendlease’s Broadsign;
-Campaign: 23628183 (example of a Lendlease site in this campaign - LL.SUSH/55D-18A)
-
-Campaign name: Optus x Postpaid ROOH FY23 - May
-
-2. Campaigns: 23786072 
-
-Campaign names: (Upfield Q2 Burst 1) 
-
-3. Campaigns: 23860588
-
-Campaign name: (PARTNERSHIP - Nestle - Milo 2023 Brief)
-
-
-
-Lendlease shared the duplicate Optus campaign (23628183);
-
-(see images attached)
-
-Broadsign ID: 825967229
-
-This campaign was cancelled however was running for several days.
-
-
-
-Jordan - here is another example of a duplication. Pix API logs should be available, given the dates.
-
-
-Campaign: 24370371
-
-Site: LAJO/55D-12A
-
-Dates: 3/07 - 16/07
-
-Expected Outcomes:
-Understand why and how these campaigns were duplicated.
-`;
+const dataObjToMD = (data) => {
+  const res =
+    "# " +
+    data.title +
+    "\n\n" +
+    "Confidence:" +
+    data.scoreConfidence +
+    "\n\n" +
+    data.content +
+    "\n\n" +
+    "Link: " +
+    `[${data.documentUrl}](${data.documentUrl})` +
+    "\n\n";
+  return res;
+};
 
 const chatHandler = async (req, res) => {
   const query = req.body.query;
-  // const searchResult = ...
-  const openaiRes = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "user",
-        content: `
-        Summarize the text below as a bullet point list of the most important points.
-
-        Text: """
-        ${mockSearchResult}
-        """
-        `,
-      },
-    ],
-    temperature: 0.5,
-    max_tokens: 256,
-  });
-  const formattedAnswer = openaiRes.choices[0].message.content;
+  const params = {
+    IndexId: "11cba520-ef95-45f6-8804-f6058fa918da",
+    QueryText: query,
+  };
+  const rawData = await kendra.retrieve(params).promise();
+  const dataObject = rawData.ResultItems.slice(0, 3).map((item) => ({
+    title: item.DocumentTitle,
+    content: item.Content,
+    documentUrl: item.DocumentURI,
+    scoreConfidence: item.ScoreAttributes.ScoreConfidence,
+  }));
+  // console.log("dataObject", dataObject);
+  const formattedAnswer = dataObject.reduce((prev, curr) => {
+    const res = prev + dataObjToMD(curr);
+    return res;
+  }, "");
+  // console.log("formattedAnswer", formattedAnswer);
   res.status(200).json({
     message: formattedAnswer,
   });
