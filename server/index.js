@@ -32,22 +32,26 @@ const chatHandler = async (req, res) => {
     IndexId: "11cba520-ef95-45f6-8804-f6058fa918da",
     QueryText: query,
   };
-  const rawData = await kendra.retrieve(params).promise();
-  const dataObject = rawData.ResultItems.slice(0, 5).map((item) => ({
-    title: item.DocumentTitle,
-    content: item.Content,
-    documentUrl: item.DocumentURI,
-    scoreConfidence: item.ScoreAttributes.ScoreConfidence,
-  }));
-  // console.log("dataObject", dataObject);
-  const formattedAnswer = dataObject.reduce((prev, curr) => {
-    const res = prev + dataObjToMD(curr);
-    return res;
-  }, "");
-  // console.log("formattedAnswer", formattedAnswer);
-  res.status(200).json({
-    message: formattedAnswer,
-  });
+  try {
+    const rawData = await kendra.retrieve(params).promise();
+    const dataObject = rawData.ResultItems.slice(0, 5).map((item) => ({
+      title: item.DocumentTitle,
+      content: item.Content,
+      documentUrl: item.DocumentURI,
+      scoreConfidence: item.ScoreAttributes.ScoreConfidence,
+    }));
+    // console.log("dataObject", dataObject);
+    const formattedAnswer = dataObject.reduce((prev, curr) => {
+      const res = prev + dataObjToMD(curr);
+      return res;
+    }, "");
+    // console.log("formattedAnswer", formattedAnswer);
+    res.status(200).json({
+      message: formattedAnswer,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 app.post("/chat", chatHandler);
