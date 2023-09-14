@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import "./ChatWindow.css";
 
 export const ChatWindow = (props) => {
-  return <div className="window">{props.children}</div>;
+  const bottomRef = useRef();
+  useEffect(() => {
+    if (bottomRef && bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [props.children.length]);
+  return (
+    <div className="window">
+      {props.children}
+      <div ref={bottomRef} />
+    </div>
+  );
 };
