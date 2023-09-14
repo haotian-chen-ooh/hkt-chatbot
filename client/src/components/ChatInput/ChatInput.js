@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./ChatInput.css";
 
 const chatEndpoint = "http://localhost:4000/chat";
 
@@ -41,13 +42,16 @@ export const ChatInput = ({ messages, setMessages }) => {
   };
 
   return (
-    <div>
+    <div className="container">
       <input
         type="text"
+        className="input"
         value={text}
         onChange={(t) => setText(t.target.value)}
       />
-      <button onClick={onSend}>Send</button>
+      <button className="button" onClick={onSend}>
+        SEND
+      </button>
     </div>
   );
 };
