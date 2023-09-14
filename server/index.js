@@ -33,7 +33,7 @@ const chatHandler = async (req, res) => {
     QueryText: query,
   };
   const rawData = await kendra.retrieve(params).promise();
-  const dataObject = rawData.ResultItems.slice(0, 3).map((item) => ({
+  const dataObject = rawData.ResultItems.slice(0, 5).map((item) => ({
     title: item.DocumentTitle,
     content: item.Content,
     documentUrl: item.DocumentURI,
