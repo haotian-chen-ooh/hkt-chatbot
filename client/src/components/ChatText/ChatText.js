@@ -4,7 +4,13 @@ import "./ChatText.css";
 
 export const ChatText = ({ message }) => {
   return (
-    <div>
+    <div
+      className={`text-container ${
+        message.from === "me"
+          ? "text-container-right-align"
+          : "text-container-left-align"
+      }`}
+    >
       <div
         className={`text ${
           message.from === "me" ? "me-background" : "chatbot-background"

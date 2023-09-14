@@ -1,11 +1,28 @@
+.text-container {
+  display: flex;
+  flex-direction: row;
+  margin: 4px;
+}
+
+.text-container-left-align {
+  justify-content: left;
+}
+
+.text-container-right-align {
+  justify-content: right;
+}
+
 .text {
   width: fit-content;
+  padding: 0 1em;
+  border-radius: 5px;
+  color: white;
 }
 
 .me-background {
-  background-color: antiquewhite;
+  background-color: #57b666;
 }
 
 .chatbot-background {
-  background-color: aquamarine;
+  background-color: #f60;
 }
